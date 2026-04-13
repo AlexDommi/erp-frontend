@@ -1,0 +1,32 @@
+<div class="layout">
+
+  <aside class="sidebar">
+    <h2>ERP AlexSD</h2>
+
+    <ul>
+      <li routerLink="/dashboard">
+        Dashboard
+      </li>
+      <li *ngIf="hasPermission('Usuarios.Ver')" routerLink="/usuarios">
+        Usuarios
+      </li>
+    </ul>
+  </aside>
+
+  <div class="main">
+
+    <header class="header">
+      <span>Bienvenido</span>
+      <button mat-stroked-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Salir
+      </button>
+    </header>
+
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+
+  </div>
+
+</div>

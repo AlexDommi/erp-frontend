@@ -1,0 +1,46 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+.tabla {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+/* HEADER */
+.mat-mdc-header-row {
+  background: #1e293b !important;
+}
+
+.mat-mdc-header-cell {
+  color: #fff !important;
+  font-weight: 600;
+  padding: 14px;
+}
+
+/* CELDAS */
+.mat-mdc-cell {
+  padding: 12px;
+  color: #333;
+}
+
+/* FILAS */
+.mat-mdc-row:nth-child(even) {
+  background: #f9fafb !important;
+}
+
+.mat-mdc-row:hover {
+  background: #e0f2fe !important;
+  transition: 0.2s;
+}
+
+/* BOTONES */
+button {
+  margin-right: 5px;
+}
+
+.mat-elevation-z8 {
+  border-radius: 12px;
+  overflow: hidden;
+}
