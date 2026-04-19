@@ -1,9 +1,53 @@
-<h2 *ngIf="!id">Nuevo Usuario</h2>
-<h2 *ngIf="id">Editar Usuario</h2>
+<div class="container">
 
-<form>
-  <input placeholder="Email">
-  <input type="password" placeholder="Password">
+  <mat-card>
 
-  <button type="submit">Guardar</button>
+    <mat-card-header>
+      <mat-card-title>
+        @if (!id) {
+          Nuevo Usuario
+        } @else {
+          Editar Usuario
+          <span class="usuario-nombre">{{ form.get('email')?.value }}</span>
+        }
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" class="form">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+
+    <input matInput formControlName="email" required />
+
+    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+      <mat-error>{{ errorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+
+    <input matInput formControlName="password" [type]="hide() ? 'password' : 'text'" />
+
+    <button mat-icon-button matSuffix (click)="clickEvent($event)">
+      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Empresa</mat-label>
+    <input matInput formControlName="empresaId" />
+  </mat-form-field>
 </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button (click)="guardar()" color="primary">Guardar</button>
+    </mat-card-actions>
+
+  </mat-card>
+
+</div>

@@ -6,22 +6,31 @@
 
     <form (ngSubmit)="login()">
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Correo</mat-label>
-        <input matInput [(ngModel)]="email" name="email" required>
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Correo</mat-label>
+    <input matInput [(ngModel)]="email" name="email" required>
+  </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Contraseña</mat-label>
-        <input matInput type="password" [(ngModel)]="password" name="password" required>
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Contraseña</mat-label>
+    <input matInput type="password" [(ngModel)]="password" name="password" required>
+  </mat-form-field>
 
-      <button mat-raised-button color="primary" class="full-width">
-        Ingresar
-      </button>
+  <button mat-raised-button color="primary"
+        class="full-width"
+        type="submit"
+        [disabled]="!email || !password">
+    Ingresar
+  </button>
 
-    </form>
+</form>
 
+<!-- 👇 AQUÍ -->
+@if (errorLogin()) {
+  <div class="error-login">
+    {{ errorLogin() }}
+  </div>
+}
   </mat-card>
 
 </div>
