@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { UsuarioFormComponent } from './usuario-form.component';
 
 describe('UsuarioFormComponent', () => {
@@ -8,7 +7,9 @@ describe('UsuarioFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UsuarioFormComponent]
+      imports: [
+        UsuarioFormComponent
+      ]
     })
     .compileComponents();
 

@@ -1,5 +1,5 @@
 import { AuthService } from './../../services/auth.service';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule} from '@angular/forms';
 
 //funcionalidades
@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule} from '@angular/material/icon';
 import { Route, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ import { Route, Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    CommonModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -28,19 +30,21 @@ export class LoginComponent {
   email = '';
   password = '';
   error = '';
-
+  errorLogin = signal('');
+  
   constructor(
       private authService:AuthService,
       private router: Router
     ){}
 
   login() {
+    this.errorLogin.set('');
     this.authService.login(this.email,this.password)
     .subscribe({
       next: (res) => {
         console.log('RESPUESTA LOGIN:', res);
 
-        const token = res.token?.token; // 🔥 AQUÍ ESTÁ LA CLAVE
+        const token = res.token?.token;
         const permisos = res.token?.permisos;
 
         console.log('TOKEN REAL:', token);
@@ -51,8 +55,13 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-      console.log('ERROR COMPLETO:', err);
-      console.log('ERRORES BACKEND:', err.error.errors);
+        console.log('ERROR:', err);
+
+        if (err.status === 401) {
+          this.errorLogin.set('Usuario o contraseña inválidos');
+        } else {
+          this.errorLogin.set('Error en el servidor');
+        }
     }
     });
   }

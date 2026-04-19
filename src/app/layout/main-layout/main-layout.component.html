@@ -1,22 +1,72 @@
-<div class="layout">
+<div class="layout" [class.collapsed]="isCollapsed">
 
   <aside class="sidebar">
-    <h2>ERP Alex SD</h2>
 
-    <ul>
-      <li routerLink="/dashboard">
-        Dashboard
+    <div class="logo">
+      <mat-icon class="logo-icon">dashboard</mat-icon>
+      <span *ngIf="!isCollapsed">ERP Alex SD</span>
+    </div>
+
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <ul class="menu">
+
+      <!-- DASHBOARD -->
+      <li routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        <span *ngIf="!isCollapsed">Dashboard</span>
       </li>
-      <li *ngIf="hasPermission('Usuarios.Ver')" routerLink="/usuarios">
-        Usuarios
+
+      <!-- USUARIOS -->
+      <li class="menu-group" *ngIf="hasPermission('Usuarios.Ver')">
+
+        <div class="menu-title" (click)="toggleMenu('usuarios')">
+          <mat-icon>group</mat-icon>
+          <span *ngIf="!isCollapsed">Usuarios</span>
+          <mat-icon class="arrow" *ngIf="!isCollapsed"
+            [class.open]="openMenu === 'usuarios'">
+            expand_more
+          </mat-icon>
+        </div>
+
+        <ul class="submenu" [class.open]="openMenu === 'usuarios' && !isCollapsed">
+          <li routerLink="/usuarios" routerLinkActive="active">Lista</li>
+          <li routerLink="/usuarios/roles" routerLinkActive="active">Roles</li>
+          <li routerLink="/usuarios/permisos" routerLinkActive="active">Permisos</li>
+        </ul>
+
       </li>
+
+      <!-- CLIENTES -->
+      <li class="menu-group">
+
+        <div class="menu-title" (click)="toggleMenu('clientes')">
+          <mat-icon>people</mat-icon>
+          <span *ngIf="!isCollapsed">Clientes</span>
+          <mat-icon class="arrow" *ngIf="!isCollapsed"
+            [class.open]="openMenu === 'clientes'">
+            expand_more
+          </mat-icon>
+        </div>
+
+        <ul class="submenu" [class.open]="openMenu === 'clientes' && !isCollapsed">
+          <li routerLink="/clientes" routerLinkActive="active">Clientes</li>
+          <li routerLink="/clientes/direcciones" routerLinkActive="active">Direcciones</li>
+        </ul>
+
+      </li>
+
     </ul>
+
   </aside>
 
   <div class="main">
 
     <header class="header">
-      <span>Bienvenido</span>
+      <span class="welcome">Bienvenido, Alex</span>
+
       <button mat-stroked-button color="warn" (click)="logout()">
         <mat-icon>logout</mat-icon>
         Salir

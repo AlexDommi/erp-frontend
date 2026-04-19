@@ -9,8 +9,7 @@ export const permissionGuard = (permissions: string[]): CanActivateFn => {
     const hasPermission = permissions.some(p => userPerms.includes(p));
 
     if (!hasPermission) {
-      router.navigate(['/dashboard']);
-      return false;
+      return router.createUrlTree(['/dashboard']); // 🔥 mejor práctica
     }
 
     return true;

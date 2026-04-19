@@ -25,9 +25,10 @@ export const routes: Routes = [
           .then(m => m.DashboardComponent)
       },
 
-      // 🔥 AQUÍ debe estar usuarios
+      /* ===== USUARIOS ===== */
       {
         path: 'usuarios',
+        canActivate: [permissionGuard(['Usuarios.Ver'])],
         children: [
           {
             path: '',
@@ -43,9 +44,38 @@ export const routes: Routes = [
             path: 'editar/:id',
             loadComponent: () => import('./pages/usuarios/usuario-form/usuario-form.component')
               .then(m => m.UsuarioFormComponent)
+          },
+          {
+            path: 'roles',
+            loadComponent: () => import('./pages/usuarios/usuarios-roles/usuarios-roles.component')
+              .then(m => m.UsuariosRolesComponent)
+          },
+          {
+            path: 'permisos',
+            loadComponent: () => import('./pages/usuarios/usuarios-permisos/usuarios-permisos.component')
+              .then(m => m.UsuariosPermisosComponent)
+          }
+        ]
+      },
+
+      /* ===== CLIENTES ===== */
+      {
+        path: 'clientes',
+        /*canActivate: [permissionGuard(['Clientes.Ver'])],*/
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./pages/ModClientes/clientes/clientes.component')
+              .then(m => m.ClientesComponent)
+          },
+          {
+            path: 'direcciones',
+            loadComponent: () => import('./pages/ModClientes/direcciones/direcciones.component')
+              .then(m => m.DireccionesComponent)
           }
         ]
       }
+
     ]
   },
   {
