@@ -1,0 +1,28 @@
+<div class="container">
+  <h2>Asignar Permisos al Rol</h2>
+
+  <div *ngFor="let modulo of permisosAgrupados | keyvalue" class="modulo">
+
+    <div class="modulo-header">
+      <input
+        type="checkbox"
+        (change)="toggleModulo(modulo.key)"
+      />
+      <strong>{{ modulo.key | uppercase }}</strong>
+    </div>
+
+    <div class="acciones">
+      <label *ngFor="let permiso of modulo.value">
+        <input
+          type="checkbox"
+          [checked]="isChecked(permiso.id)"
+          (change)="togglePermiso(permiso.id)"
+        />
+        {{ permiso.accion }}
+      </label>
+    </div>
+
+  </div>
+
+  <button (click)="guardar()">Guardar</button>
+</div>

@@ -11,6 +11,7 @@ import {merge} from 'rxjs';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { UsuariosService } from './../../../services/usuarios.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-usuario-form',
@@ -24,7 +25,8 @@ import { UsuariosService } from './../../../services/usuarios.service';
             MatIconModule,
             FormsModule,
             ReactiveFormsModule,
-            MatCardModule
+            MatCardModule,
+            MatTabsModule
           ],
   templateUrl: './usuario-form.component.html',
   styleUrl: './usuario-form.component.scss'
@@ -34,7 +36,15 @@ export class UsuarioFormComponent implements OnInit {
   errorMessage = signal('');
   hide = signal(true);
   id: number | null = null;
+  // 🔹 ROLES
+  roles: any[] = [];
+  rolesUsuario: number[] = [];
 
+  // 🔹 PERMISOS
+  permisosDisponibles: any[] = [];
+  permisosSeleccionados: number[] = [];
+  permisosUsuario: number[] = [];
+  permisosAgrupados: { [key: string]: any[] } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -73,16 +83,21 @@ export class UsuarioFormComponent implements OnInit {
   ngOnInit(){
     const idParam = this.route.snapshot.params['id'];
     this.id = idParam ? Number(idParam) : null;
+    this.cargarRoles();
 
     if (this.id) {
       this.CargarUsuario(this.id);
       console.log('Modo Edicion',this.id)
+      this.usuariosService.getRolesById(this.id).subscribe((resp: any[]) => {
+      this.rolesUsuario = resp.map(r => r.rolId);
+  });
     }
   }
   CargarUsuario(id:number){
     this.usuariosService.getUsuariosId(id).subscribe((resp:any)=>{
-      console.log('USUARIOS BY ID',resp);
+      
       this.form.patchValue(resp);
+      this.permisosUsuario = resp.permisos || [];
     });
   };
 
@@ -90,11 +105,83 @@ export class UsuarioFormComponent implements OnInit {
     this.router.navigate(['/usuarios']);
   }
 
+  onTabChange(index: number) {
+    if (index === 2) {
+      this.cargarPermisos();
+    }
+  }
+
+  cargarRoles() {
+  this.usuariosService.getRoles().subscribe((resp:any)=>{
+    this.roles = resp;
+  });
+}
+  
+  cargarPermisos() {
+
+    if (this.rolesUsuario.length === 0) {
+      this.permisosDisponibles = [];
+      return;
+    }
+
+    this.usuariosService
+      .getPermisosPorRoles(this.rolesUsuario)
+      .subscribe((resp:any)=>{
+
+        this.permisosDisponibles = resp;
+
+        // 🔥 marcar los del usuario
+        this.permisosSeleccionados = [...this.permisosUsuario];
+
+        this.agruparPermisos();
+      });
+  }
+
+  agruparPermisos() {
+    this.permisosAgrupados = {};
+
+    this.permisosDisponibles.forEach((p:any) => {
+      if (!this.permisosAgrupados[p.modulo]) {
+        this.permisosAgrupados[p.modulo] = [];
+      }
+      this.permisosAgrupados[p.modulo].push(p);
+    });
+  }
+
+  toggleRol(id: number) {
+    if (this.rolesUsuario.includes(id)) {
+      this.rolesUsuario = this.rolesUsuario.filter(x => x !== id);
+    } else {
+      this.rolesUsuario.push(id);
+    }
+
+    // 🔥 resetear permisos
+    this.permisosSeleccionados = [];
+    this.permisosDisponibles = [];
+  }
+
+  togglePermiso(id: number) {
+    if (this.permisosSeleccionados.includes(id)) {
+      this.permisosSeleccionados =
+        this.permisosSeleccionados.filter(x => x !== id);
+    } else {
+      this.permisosSeleccionados.push(id);
+    }
+  }
+
+  isChecked(id: number) {
+    return this.permisosSeleccionados.includes(id);
+  }
   guardar() {
+
     if(this.form.invalid)
       return;
 
-    const data = this.form.value;
+    const data = {
+                  ...this.form.value,
+                  roles: this.rolesUsuario,
+                  permisos: this.permisosSeleccionados
+                }
 
     if(this.id){
       this.usuariosService.actualizarUsuario(this.id,data).subscribe(() => {

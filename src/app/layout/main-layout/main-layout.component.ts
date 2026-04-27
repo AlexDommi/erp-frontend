@@ -30,7 +30,10 @@ export class MainLayoutComponent {
         this.openMenu = 'usuarios';
       } else if (url.includes('/clientes')) {
         this.openMenu = 'clientes';
-      }
+      } /*else if (url.includes('/roles-permisos')) {
+        this.openMenu = 'roles-permisos';
+      }*/
+      
     });
   }
   isCollapsed = false;

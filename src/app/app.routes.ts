@@ -54,6 +54,11 @@ export const routes: Routes = [
             path: 'permisos',
             loadComponent: () => import('./pages/usuarios/usuarios-permisos/usuarios-permisos.component')
               .then(m => m.UsuariosPermisosComponent)
+          },
+          {
+            path: 'roles-permisos',
+            loadComponent: () => import('./pages/usuarios/roles-permisos/roles-permisos.component')
+              .then(m => m.RolesPermisosComponent)
           }
         ]
       },
